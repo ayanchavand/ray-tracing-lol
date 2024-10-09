@@ -48,6 +48,7 @@ public:
 	}
 };
 
+//Just a fuckin alias for the same fuckin class ehs
 using point3 = vec3;
 
 inline std::ostream& operator<<(std::ostream& out, const vec3& v) {
