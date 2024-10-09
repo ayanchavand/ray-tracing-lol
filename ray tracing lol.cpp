@@ -1,12 +1,16 @@
+#include "vec3.h"
+#include"color.h"
+
 #include <iostream>
-#include <fstream>
+
 int main() {
 	
-	//create the image file
+	//Create the image file
+	//Should probably handle file creation error but meh
 	std::ofstream image("image.ppm");
-	//should  probably handle file creation error but meh
+	
 
-	//resolution
+	//Resolution
 	int image_height = 256;
 	int image_width = 256;
 
@@ -14,16 +18,11 @@ int main() {
 
 	for (int i = 0; i < image_height; i++) {
 		std::clog << "\rScanlines reamaining: " << (image_height - 1) << ' ' << std::flush;
+
+		//Bitch y dis loop so unintuitive maaan
 		for (int j = 0; j < image_width; j++) {
-			double r = double(j) / (image_width - 1);
-			double g = double(i) / (image_height - 1);
-			double b = 0.0;
-
-			int ir = (255.999 * r);
-			int ig = (255.999 * g);
-			int ib = (255.999 * b);
-
-			image << ir << ' ' << ig << ' ' << ib << std::endl;
+			color pixel_color(double(j) / (image_width - 1), double(i) / (image_height - 1), 0.0);
+			write_color(image, pixel_color);
 		}
 	}
 
