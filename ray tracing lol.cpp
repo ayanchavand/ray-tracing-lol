@@ -4,7 +4,6 @@ int main() {
 	
 	//create the image file
 	std::ofstream image("image.ppm");
-
 	//should  probably handle file creation error but meh
 
 	//resolution
