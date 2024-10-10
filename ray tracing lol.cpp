@@ -4,18 +4,34 @@
 
 #include <iostream>
 
+bool hit_sphere(const point3& center, double radius, const ray& r) {
+	vec3 oc = center - r.origin();
+	auto a = dot(r.direction(), r.direction());
+	auto b = 2 * dot(r.direction(), oc);
+	auto c = dot(oc, oc) - (radius * radius);
+
+	auto discriminat = b * b - 4 * a * c;
+	return (discriminat >= 0);
+}
+
 color ray_color(const ray& r) {
-	//blendedValue = (1−a)⋅startValue + a⋅endValue
+
+
+	if (hit_sphere(point3(0, 0, -1), 0.5, r)) {
+		return color(1,0, 0);
+	}
+	
 	vec3 unit_direction = unit_vector(r.direction());
+	// a = (y + 1) / 2
 	double a = 0.5 * (unit_direction.y() + 1);
+	//blendedValue = (1−a)⋅startValue + a⋅endValue
+	//This is basically the formula of lerp function
 	color pixel_color = (1 - a) * color(1, 1, 1) + a * color(0, 0, 1);
 	return pixel_color;
 }
 
 int main() {
 	
-
-
 	//Create the image file
 	//Should probably handle file creation error but meh
 	std::ofstream image("image.ppm");
@@ -37,7 +53,7 @@ int main() {
 	//Camera
 	double focal_length = 1.0;
 	double viewport_height = 2.0;
-	double viewport_width = viewport_height * (image_width / image_height);
+	double viewport_width = viewport_height * double(image_width) / image_height;
 	point3 camera_center = point3(0, 0, 0);
 	
 	//Viewport Vectors
@@ -47,9 +63,6 @@ int main() {
 	//Delta vectors from pixel to pixel
 	auto pixel_delta_u = viewport_u / image_width;
 	auto pixel_delta_v = viewport_v / image_height;
-
-	//I still have no clue what this code does (I need mental healing)
-	//Nvm I think I got it
 	
 	//I think it computes the vector to the upper left point of the viewport
 	auto viewport_upper_left = camera_center
