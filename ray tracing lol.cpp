@@ -1,11 +1,15 @@
-#include "vec3.h"
+﻿#include "vec3.h"
 #include "color.h"
 #include "ray.h"
 
 #include <iostream>
 
 color ray_color(const ray& r) {
-	return color(0, 0, 0);
+	//blendedValue = (1−a)⋅startValue + a⋅endValue
+	vec3 unit_direction = unit_vector(r.direction());
+	double a = 0.5 * (unit_direction.y() + 1);
+	color pixel_color = (1 - a) * color(1, 1, 1) + a * color(0, 0, 1);
+	return pixel_color;
 }
 
 int main() {
@@ -25,8 +29,8 @@ int main() {
 	/*
 	 * If you're wondering why we don't just use aspect_ratio when computing viewport_width,
      * it's because the value set to aspect_ratio is the ideal ratio, it may not be the actual
-	 * ratio between image_width and image_height. If image_height was allowed to be real valued�rather 
-	 * than just an integer�then it would be fine to use aspect_ratio. 
+	 * ratio between image_width and image_height. If image_height was allowed to be real valued—rather 
+	 * than just an integer—then it would be fine to use aspect_ratio. 
 	 * But the actual ratio between image_width and image_height can vary based on two parts of the code.
 	 */
 
@@ -62,7 +66,7 @@ int main() {
 	for (int i = 0; i < image_height; i++) {
 		std::clog << "\rScanlines reamaining: " << (image_height - 1) << ' ' << std::flush;
 		for (int j = 0; j < image_width; j++) {
-			point3 pixel_center = pixel00_loc + (j * pixel_delta_u) + (j * pixel_delta_v);
+			point3 pixel_center = pixel00_loc + (j * pixel_delta_u) + (i * pixel_delta_v);
 			//Someone help me visualize this lol
 			vec3 ray_direction = pixel_center - camera_center;
 			ray r = ray(camera_center, ray_direction);
